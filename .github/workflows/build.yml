@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build-images:
+  build-and-scan:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -23,9 +23,28 @@ jobs:
         with:
           context: ./${{ matrix.service }}
           push: false
+          load: true
           tags: ${{ matrix.service }}:ci
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,scope=${{ matrix.service }},mode=max
+
+      - name: Scan ${{ matrix.service }} with grype
+        uses: anchore/scan-action@v5
+        with:
+          image: ${{ matrix.service }}:ci
+          fail-build: false
+          severity-cutoff: critical
+          output-format: table
+
+      - name: Save image
+        run: docker save ${{ matrix.service }}:ci -o /tmp/${{ matrix.service }}.tar
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-${{ matrix.service }}
+          path: /tmp/${{ matrix.service }}.tar
+          retention-days: 1
 
   lint-chart:
     runs-on: ubuntu-latest
@@ -36,3 +55,47 @@ jobs:
 
       - name: Lint chart
         run: helm lint ./chart
+
+  deploy-kind:
+    needs: [build-and-scan, lint-chart]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download image artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/images
+          pattern: image-*
+          merge-multiple: true
+
+      - uses: helm/kind-action@v1
+        with:
+          cluster_name: kind
+
+      - name: Load images into kind
+        run: |
+          for tar in /tmp/images/*.tar; do
+            docker load -i "$tar"
+          done
+          kind load docker-image \
+            banking-web-ui:ci \
+            banking-database:ci \
+            banking-worker:ci \
+            --name kind
+
+      - uses: azure/setup-helm@v4
+
+      - name: Helm install
+        run: |
+          helm install banking-demo ./chart \
+            --namespace banking-demo --create-namespace \
+            --set image.tag=ci \
+            --wait --timeout 5m
+
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          kubectl get pods -n banking-demo -o wide
+          kubectl describe pods -n banking-demo
+          kubectl logs -n banking-demo --all-containers --tail=200 || true
