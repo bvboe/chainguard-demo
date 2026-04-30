@@ -91,6 +91,7 @@ jobs:
           helm install banking-demo ./chart \
             --namespace banking-demo --create-namespace \
             --set image.tag=ci \
+            --set image.pullPolicy=Never \
             --wait --timeout 5m
 
       - name: Diagnostics on failure
