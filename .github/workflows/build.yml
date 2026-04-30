@@ -6,6 +6,12 @@ on:
   push:
     branches: [main]
 
+env:
+  # Opt JavaScript actions into Node.js 24 ahead of GitHub forcing it on
+  # 2026-06-02. Lets us drop the deprecation warnings without waiting
+  # for upstream actions to ship Node 24-native versions.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
