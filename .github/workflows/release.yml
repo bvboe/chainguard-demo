@@ -31,10 +31,30 @@ jobs:
         id: tag
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+            TAG="${GITHUB_REF#refs/tags/}"
+            TAG="${TAG#v}"
           else
-            echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+            TAG="${GITHUB_SHA::7}"
           fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Verify Chart.yaml and values.yaml match the tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          CHART_VERSION=$(grep '^version:' chart/Chart.yaml | awk '{print $2}')
+          VALUES_TAG=$(grep -E '^[[:space:]]+tag:' chart/values.yaml | head -1 | awk '{print $2}')
+          fail=0
+          if [[ "$CHART_VERSION" != "$TAG" ]]; then
+            echo "::error::Chart.yaml version ($CHART_VERSION) does not match tag ($TAG). Did you run scripts/release.sh?"
+            fail=1
+          fi
+          if [[ "$VALUES_TAG" != "$TAG" ]]; then
+            echo "::error::values.yaml image.tag ($VALUES_TAG) does not match tag ($TAG). Did you run scripts/release.sh?"
+            fail=1
+          fi
+          [[ $fail -eq 0 ]] && echo "Versions verified: $TAG"
+          exit $fail
 
       - name: Build and push ${{ matrix.service }}
         uses: docker/build-push-action@v6

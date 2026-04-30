@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 # Build all service images locally and load them into the active kind cluster.
-# Usage: ./scripts/build.sh [tag]   (default tag: local)
+# Usage: ./scripts/build.sh [tag]
+#   default tag: image.tag from chart/values.yaml (the version of the
+#   currently checked-out commit). Pass an explicit tag to override.
 set -euo pipefail
 
-TAG="${1:-local}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+DEFAULT_TAG=$(grep -E '^[[:space:]]+tag:' "$ROOT_DIR/chart/values.yaml" | head -1 | awk '{print $2}')
+TAG="${1:-$DEFAULT_TAG}"
 
 SERVICES=(banking-web-ui banking-database banking-worker)
 
