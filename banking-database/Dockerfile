@@ -1,4 +1,4 @@
-FROM postgres:18
+FROM cgr.dev/chainguard-private/postgres:18
 
-COPY schema.sql /docker-entrypoint-initdb.d/01-schema.sql
-COPY seed.sql   /docker-entrypoint-initdb.d/02-seed.sql
+COPY schema.sql /var/lib/postgres/initdb/01-schema.sql
+COPY seed.sql   /var/lib/postgres/initdb/02-seed.sql

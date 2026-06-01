@@ -1,4 +1,4 @@
-FROM node:24 AS builder
+FROM cgr.dev/chainguard-private/node:24-dev AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:24 AS runtime
+FROM cgr.dev/chainguard-private/node:24 AS runtime
 
 WORKDIR /app
 
@@ -18,4 +18,4 @@ COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["server.js"]

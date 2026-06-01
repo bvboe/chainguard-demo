@@ -1,4 +1,4 @@
-FROM python:3.14-slim AS builder
+FROM cgr.dev/chainguard-private/python:3.14-dev AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -10,7 +10,7 @@ ENV PATH="/app/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.14-slim
+FROM cgr.dev/chainguard-private/python:3.14
 
 WORKDIR /app
 
