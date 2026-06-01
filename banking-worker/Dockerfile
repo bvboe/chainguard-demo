@@ -10,7 +10,7 @@ ENV PATH="/app/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM cgr.dev/chainguard-private/python:latest
+FROM cgr.dev/chainguard/python:latest
 
 WORKDIR /app
 
