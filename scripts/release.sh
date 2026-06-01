@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Cut a release: bump chart/Chart.yaml and chart/values.yaml to a new
-# version, commit the bump, tag it, and push main + tag to origin
-# (which triggers the release workflow).
+# version, commit the bump, tag it, and push main + development + tag to
+# origin (which triggers the release workflow). Pushing the release
+# commit to development too keeps it in sync — saves a manual fast-forward
+# after every release.
 #
 # Must be run from the main branch.
 #
@@ -74,8 +76,10 @@ echo "==> Tagging $TAG"
 git -C "$ROOT_DIR" tag -a "$TAG" -m "Release $TAG"
 
 echo ""
-echo "==> Pushing main and $TAG to origin"
-git -C "$ROOT_DIR" push origin main "$TAG"
+echo "==> Pushing main, development, and $TAG to origin"
+# Atomic multi-refspec push: advances origin/main, fast-forwards
+# origin/development to match, and creates the tag — all or nothing.
+git -C "$ROOT_DIR" push origin main main:development "$TAG"
 
 echo ""
 echo "==> Done. The release workflow will publish images and the chart to GHCR."
