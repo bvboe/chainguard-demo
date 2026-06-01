@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard-private/node:24-dev AS builder
+FROM cgr.dev/chainguard/node:latest-dev AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY . .
 
 RUN npm run build
 
-FROM cgr.dev/chainguard-private/node:24 AS runtime
+FROM cgr.dev/chainguard/node:latest AS runtime
 
 WORKDIR /app
 
