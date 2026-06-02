@@ -20,7 +20,7 @@ jobs:
       matrix:
         service: [banking-web-ui, banking-database, banking-worker]
     steps:
-      - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
+      - uses: chainguard-actions/actions-checkout@d1f1061cdaee56aa3a3bc3deb86b67b1db772dd6  # v6.0.2
 
       - uses: docker/setup-buildx-action@v3
 
@@ -51,7 +51,7 @@ jobs:
           cache-to: type=gha,scope=${{ matrix.service }},mode=max
 
       - name: Scan ${{ matrix.service }} with grype
-        uses: chainguard-actions/anchore-scan-action@2bbe514fdfc15d6afd73e553ad2f87715b597079  # v5
+        uses: chainguard-actions/anchore-scan-action@1e3adf7761b663ebd2c9048b7bd69a7df7bd3834  # v7.4.0
         with:
           image: ${{ matrix.service }}:ci
           fail-build: false
@@ -71,7 +71,7 @@ jobs:
   lint-chart:
     runs-on: ubuntu-latest
     steps:
-      - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
+      - uses: chainguard-actions/actions-checkout@d1f1061cdaee56aa3a3bc3deb86b67b1db772dd6  # v6.0.2
 
       - uses: azure/setup-helm@v4
 
@@ -82,10 +82,10 @@ jobs:
     needs: [build-and-scan, lint-chart]
     runs-on: ubuntu-latest
     steps:
-      - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
+      - uses: chainguard-actions/actions-checkout@d1f1061cdaee56aa3a3bc3deb86b67b1db772dd6  # v6.0.2
 
       - name: Download image artifacts
-        uses: chainguard-actions/actions-download-artifact@c922f60f5e235ac0f69aa8a9d40c972e973b129f  # v4
+        uses: chainguard-actions/actions-download-artifact@32ccc81b9ae713e3356ab659b862168905dec3e8  # v8.0.1
         with:
           path: /tmp/images
           pattern: image-*
