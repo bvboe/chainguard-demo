@@ -62,7 +62,7 @@ jobs:
         run: docker save ${{ matrix.service }}:ci -o /tmp/${{ matrix.service }}.tar
 
       - name: Upload image artifact
-        uses: chainguard-actions/actions-upload-artifact@06f4847a8894deb68d34c095cad713faeac5b5f0  # v4
+        uses: actions/upload-artifact@v4
         with:
           name: image-${{ matrix.service }}
           path: /tmp/${{ matrix.service }}.tar
@@ -73,7 +73,7 @@ jobs:
     steps:
       - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
 
-      - uses: chainguard-actions/azure-setup-helm@f063d4ef105cdea2eda2860a1eef0995175f8418  # v4
+      - uses: azure/setup-helm@v4
 
       - name: Lint chart
         run: helm lint ./chart
@@ -106,7 +106,7 @@ jobs:
             banking-worker:ci \
             --name kind
 
-      - uses: chainguard-actions/azure-setup-helm@f063d4ef105cdea2eda2860a1eef0995175f8418  # v4
+      - uses: azure/setup-helm@v4
 
       - name: Helm install
         run: |

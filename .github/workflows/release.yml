@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
 
-      - uses: chainguard-actions/azure-setup-helm@f063d4ef105cdea2eda2860a1eef0995175f8418  # v4
+      - uses: azure/setup-helm@v4
 
       - uses: chainguard-actions/docker-login-action@164a2e486e697627e846384fd1ef96127ae18199  # v3
         with:
