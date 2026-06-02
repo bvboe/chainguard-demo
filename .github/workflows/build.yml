@@ -38,7 +38,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Build ${{ matrix.service }}
-        uses: chainguard-actions/docker--build-push-action@b048d672ea4a85435db65ae80a5db354f78d3c87  # v6
+        uses: docker/build-push-action@v6
         with:
           context: ./${{ matrix.service }}
           push: false
