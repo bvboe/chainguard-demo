@@ -62,6 +62,19 @@ jobs:
           [[ $fail -eq 0 ]] && echo "Versions verified: $TAG"
           exit $fail
 
+      - name: Compose Chainguard library credentials
+        env:
+          CG_NPM_USER:  ${{ secrets.CG_NPM_USER }}
+          CG_NPM_PASS:  ${{ secrets.CG_NPM_PASS }}
+          CG_PYPI_USER: ${{ secrets.CG_PYPI_USER }}
+          CG_PYPI_PASS: ${{ secrets.CG_PYPI_PASS }}
+        run: |
+          enc() { python3 -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$1"; }
+          {
+            echo "CG_NPM_AUTH_B64=$(printf '%s' "$CG_NPM_USER:$CG_NPM_PASS" | base64 -w0)"
+            echo "CG_PIP_INDEX_URL=https://$(enc "$CG_PYPI_USER"):$(enc "$CG_PYPI_PASS")@libraries.cgr.dev/python/simple/"
+          } >> "$GITHUB_ENV"
+
       - name: Build and push ${{ matrix.service }}
         uses: docker/build-push-action@v6
         with:
@@ -69,6 +82,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ matrix.service }}:${{ steps.tag.outputs.tag }}
+          secret-envs: |
+            cg_npm_auth_b64=CG_NPM_AUTH_B64
+            cg_pip_index_url=CG_PIP_INDEX_URL
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,scope=${{ matrix.service }},mode=max
 

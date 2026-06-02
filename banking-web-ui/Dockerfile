@@ -2,8 +2,8 @@ FROM cgr.dev/chainguard/node:latest-dev AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+COPY package*.json .npmrc ./
+RUN --mount=type=secret,id=cg_npm_auth_b64,env=CG_NPM_AUTH_B64 npm ci
 
 COPY . .
 

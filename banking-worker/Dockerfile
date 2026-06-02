@@ -8,7 +8,8 @@ RUN python -m venv venv
 ENV PATH="/app/venv/bin:$PATH"
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=secret,id=cg_pip_index_url,env=PIP_INDEX_URL \
+    pip install --no-cache-dir -r requirements.txt
 
 FROM cgr.dev/chainguard/python:latest
 
