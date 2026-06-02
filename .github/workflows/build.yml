@@ -20,9 +20,9 @@ jobs:
       matrix:
         service: [banking-web-ui, banking-database, banking-worker]
     steps:
-      - uses: actions/checkout@v4
+      - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: chainguard-actions/docker-setup-buildx-action@86d1cdbf7339bbba34cc3f29421a2b8005adfb7a  # v3
 
       - name: Compose Chainguard library credentials
         env:
@@ -38,7 +38,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Build ${{ matrix.service }}
-        uses: docker/build-push-action@v6
+        uses: chainguard-actions/docker--build-push-action@b048d672ea4a85435db65ae80a5db354f78d3c87  # v6
         with:
           context: ./${{ matrix.service }}
           push: false
@@ -51,7 +51,7 @@ jobs:
           cache-to: type=gha,scope=${{ matrix.service }},mode=max
 
       - name: Scan ${{ matrix.service }} with grype
-        uses: anchore/scan-action@v5
+        uses: chainguard-actions/anchore-scan-action@2bbe514fdfc15d6afd73e553ad2f87715b597079  # v5
         with:
           image: ${{ matrix.service }}:ci
           fail-build: false
@@ -62,7 +62,7 @@ jobs:
         run: docker save ${{ matrix.service }}:ci -o /tmp/${{ matrix.service }}.tar
 
       - name: Upload image artifact
-        uses: actions/upload-artifact@v4
+        uses: chainguard-actions/actions-upload-artifact@06f4847a8894deb68d34c095cad713faeac5b5f0  # v4
         with:
           name: image-${{ matrix.service }}
           path: /tmp/${{ matrix.service }}.tar
@@ -71,9 +71,9 @@ jobs:
   lint-chart:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
 
-      - uses: azure/setup-helm@v4
+      - uses: chainguard-actions/azure-setup-helm@f063d4ef105cdea2eda2860a1eef0995175f8418  # v4
 
       - name: Lint chart
         run: helm lint ./chart
@@ -82,16 +82,16 @@ jobs:
     needs: [build-and-scan, lint-chart]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: chainguard-actions/actions-checkout@4bd7a17abe2831437319177abe1a3c33c5678001  # v4
 
       - name: Download image artifacts
-        uses: actions/download-artifact@v4
+        uses: chainguard-actions/actions-download-artifact@c922f60f5e235ac0f69aa8a9d40c972e973b129f  # v4
         with:
           path: /tmp/images
           pattern: image-*
           merge-multiple: true
 
-      - uses: helm/kind-action@v1
+      - uses: chainguard-actions/helm-kind-action@18bc0ff6f003dd0744cdcc605ebfb044ba906ee4  # v1
         with:
           cluster_name: kind
 
@@ -106,7 +106,7 @@ jobs:
             banking-worker:ci \
             --name kind
 
-      - uses: azure/setup-helm@v4
+      - uses: chainguard-actions/azure-setup-helm@f063d4ef105cdea2eda2860a1eef0995175f8418  # v4
 
       - name: Helm install
         run: |
