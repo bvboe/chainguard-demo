@@ -1,0 +1,6 @@
+image:
+  tag: local
+  pullPolicy: IfNotPresent
+
+database:
+  storageSize: 1Gi
