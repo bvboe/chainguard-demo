@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: banking-worker
+  template:
+    metadata:
+      labels:
+        app: banking-worker
+    spec:
+      containers:
+        - name: banking-worker
+          image: banking-worker:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - secretRef:
+                name: banking-secrets
+            - configMapRef:
+                name: banking-config
