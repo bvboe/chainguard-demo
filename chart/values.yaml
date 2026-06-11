@@ -1,5 +1,5 @@
 image:
-  tag: local
+  tag: 1.0.0
   pullPolicy: IfNotPresent
 
 database:
