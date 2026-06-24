@@ -1,4 +1,4 @@
-FROM node:26 AS builder
+FROM cgr.dev/chainguard/node:latest-dev AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:26 AS runtime
+FROM cgr.dev/chainguard/node:latest AS runtime
 
 WORKDIR /app
 
@@ -19,4 +19,4 @@ COPY --from=builder /app/node_modules/.package-lock.json /app/node_modules/.pack
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["server.js"]
