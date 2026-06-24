@@ -1,8 +1,8 @@
 ---
 name: multi-stage-dockerfile
-description: 'Create optimized multi-stage Dockerfiles for any language or framework'
+description: 'Create optimized multi-stage Dockerfiles for any language or framework. Invoke this skill when a user asks to create a Dockerfile, optimize an existing Dockerfile, or requests best practices for containerizing an application.'
+allowed-tools: []
 ---
-
 Your goal is to help me create efficient multi-stage Dockerfiles that follow best practices, resulting in smaller, more secure container images.
 
 ## Multi-Stage Structure
