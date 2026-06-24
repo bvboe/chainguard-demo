@@ -20,9 +20,9 @@ jobs:
       matrix:
         service: [banking-web-ui, banking-database, banking-worker]
     steps:
-      - uses: actions/checkout@v4
+      - uses: chainguard-actions/actions-checkout@d1f1061cdaee56aa3a3bc3deb86b67b1db772dd6  # v6.0.2
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: chainguard-actions/docker-setup-buildx-action@b6beb8a80a92c55017146dc002f047479d776a98  # v4.1.0
 
       - name: Compose Chainguard library credentials
         env:
@@ -51,7 +51,7 @@ jobs:
           cache-to: type=gha,scope=${{ matrix.service }},mode=max
 
       - name: Scan ${{ matrix.service }} with grype
-        uses: anchore/scan-action@v5
+        uses: chainguard-actions/anchore-scan-action@1e3adf7761b663ebd2c9048b7bd69a7df7bd3834  # v7.4.0
         with:
           image: ${{ matrix.service }}:ci
           fail-build: false
@@ -62,7 +62,7 @@ jobs:
         run: docker save ${{ matrix.service }}:ci -o /tmp/${{ matrix.service }}.tar
 
       - name: Upload image artifact
-        uses: actions/upload-artifact@v4
+        uses: chainguard-actions/actions-upload-artifact@23adf72c36c7d4a9eb3cdd853df5f26073da1f98  # v7.0.1
         with:
           name: image-${{ matrix.service }}
           path: /tmp/${{ matrix.service }}.tar
@@ -71,9 +71,9 @@ jobs:
   lint-chart:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: chainguard-actions/actions-checkout@d1f1061cdaee56aa3a3bc3deb86b67b1db772dd6  # v6.0.2
 
-      - uses: azure/setup-helm@v4
+      - uses: chainguard-actions/azure-setup-helm@e62a32fd09ab299cd2caec4e355a61f08cd4b540  # v5.0.0
 
       - name: Lint chart
         run: helm lint ./chart
@@ -82,16 +82,16 @@ jobs:
     needs: [build-and-scan, lint-chart]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: chainguard-actions/actions-checkout@d1f1061cdaee56aa3a3bc3deb86b67b1db772dd6  # v6.0.2
 
       - name: Download image artifacts
-        uses: actions/download-artifact@v4
+        uses: chainguard-actions/actions-download-artifact@32ccc81b9ae713e3356ab659b862168905dec3e8  # v8.0.1
         with:
           path: /tmp/images
           pattern: image-*
           merge-multiple: true
 
-      - uses: helm/kind-action@v1
+      - uses: chainguard-actions/helm-kind-action@f289a44eb82f52af8379efee0cf7ce87305eb3b6  # v1.14.0
         with:
           cluster_name: kind
 
@@ -106,7 +106,7 @@ jobs:
             banking-worker:ci \
             --name kind
 
-      - uses: azure/setup-helm@v4
+      - uses: chainguard-actions/azure-setup-helm@e62a32fd09ab299cd2caec4e355a61f08cd4b540  # v5.0.0
 
       - name: Helm install
         run: |
