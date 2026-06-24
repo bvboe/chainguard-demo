@@ -1,5 +1,5 @@
 image:
-  tag: 4.0.0
+  tag: 5.0.0
   pullPolicy: IfNotPresent
 
 database:
