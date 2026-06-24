@@ -9,10 +9,10 @@ This demo takes an application through a hardening process using the following t
 
 ## Quick demo proof points
 The implementation of each technology is captured in a pull request as follows:
-* Chainguard Containers: https://github.com/bvboe/chainguard-demo/pull/10
-* Chainguard Libraries: https://github.com/bvboe/chainguard-demo/pull/11
-* Chainguard Actions: https://github.com/bvboe/chainguard-demo/pull/12
-* Chainguard Agent Skills: TBD
+* Chainguard Containers: https://github.com/bvboe/chainguard-demo/pull/18
+* Chainguard Libraries: https://github.com/bvboe/chainguard-demo/pull/19
+* Chainguard Actions: https://github.com/bvboe/chainguard-demo/pull/20
+* Chainguard Agent Skills: https://github.com/bvboe/chainguard-demo/pull/21
 
 ## Demo Pre-Requisites
 * kind - https://kind.sigs.k8s.io/
@@ -72,7 +72,7 @@ Review the scan results for the demo application at http://localhost:8081/pods.h
 We can see 3 containers running with a total of over 2,000 CVEs.
 
 ### Migrate to Chainguard Containers
-We already have a version 2 of the application that has been migrated to Chainguard Containers. Review the pull request at https://github.com/bvboe/chainguard-demo/pull/10 for more details on how this migration was done.
+We already have a version 2 of the application that has been migrated to Chainguard Containers. Review the pull request at https://github.com/bvboe/chainguard-demo/pull/18 for more details on how this migration was done.
 
 Upgrade our running application to version 2.
 ```
@@ -83,7 +83,7 @@ Revisit the scanner UI at http://localhost:8081/pods.html?namespaces=banking-dem
 <img width="1270" height="797" alt="image" src="https://github.com/user-attachments/assets/7eb062a6-c880-4190-965a-e1b96ece837b" />
 
 ### Migrate to Chainguard Libraries
-We already have a version 3 of the application that has been migrated to Chainguard Libraries. Review the pull request at https://github.com/bvboe/chainguard-demo/pull/11 for more details on how this migration was done.
+We already have a version 3 of the application that has been migrated to Chainguard Libraries. Review the pull request at https://github.com/bvboe/chainguard-demo/pull/19 for more details on how this migration was done.
 
 Upgrade our running application to version 3.
 ```
@@ -97,10 +97,10 @@ chainctl libraries verify --detailed banking-web-ui:3.0.0
 ```
 
 ### Migrate to Chainguard Actions
-We already have a version 4 of the application that has been migrated to Chainguard Actions. Review the pull request at https://github.com/bvboe/chainguard-demo/pull/12 for more details on how this migration was done.
+We already have a version 4 of the application that has been migrated to Chainguard Actions. Review the pull request at https://github.com/bvboe/chainguard-demo/pull/20 for more details on how this migration was done.
 
 ### Migrate to Chainguard Agent Skills
-We already have a version 5 of the application that has been migrated to Chainguard Agent Skills. Review the pull request at TBD for more details on how this migration was done.
+We already have a version 5 of the application that has been migrated to Chainguard Agent Skills. Review the pull request at https://github.com/bvboe/chainguard-demo/pull/21 for more details on how this migration was done.
 
 This version replaces the upstream `multi-stage-dockerfile` skill (from [`github/awesome-copilot`](https://github.com/github/awesome-copilot)) with the Chainguard-hardened equivalent. To see what the hardening pipeline changed, diff the two:
 ```
