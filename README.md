@@ -67,7 +67,7 @@ Setup port forwarding to Kubernetes vulnerability scanner.
 ```
 ./v1/scripts/port-forward-scanner.sh
 ```
-Review the scan results for the demo application at http://localhost:8081/pods.html?namespaces=banking-demo.
+Review the scan results for the demo application at http://localhost:8081/containers.html?namespaces=banking-demo.
 <img width="1270" height="797" alt="image" src="https://github.com/user-attachments/assets/ac50d80a-c406-40bd-a503-3d219ae4784b" />
 We can see 3 containers running with a total of over 2,000 CVEs.
 
